@@ -1,1 +1,35 @@
    <div id="map" style="height: 600px; width: 100%; padding: 0px;">
+
+
+//script code
+
+
+<script src="https://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+<script type="text/javascript">
+var locations = [
+<?php if(!empty($services->latitude) && !empty($services->longitude)){ ?>
+["<a target='_blank' href='#' style='color: black;'>Title</a>", <?=$services->latitude;?>, <?=$services->longitude;?>],
+<?php } ?>
+];
+var map = new google.maps.Map(document.getElementById('map'), {
+zoom: 05,
+<?php if(!empty($services->latitude) && !empty($services->longitude)){ ?>
+center: new google.maps.LatLng(<?=$services->latitude;?>, <?=$services->longitude;?>),
+<?php } ?>
+mapTypeId: google.maps.MapTypeId.ROADMAP
+});
+var infowindow = new google.maps.InfoWindow();
+var marker, i;
+for (i = 0; i < locations.length; i++) {  
+marker = new google.maps.Marker({
+position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+map: map
+});
+google.maps.event.addListener(marker, 'click', (function(marker, i) {
+return function() {
+infowindow.setContent(locations[i][0]);
+infowindow.open(map, marker);
+}
+})(marker, i));
+}
+</script>
